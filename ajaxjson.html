@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> AJAX/JSON</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    <h1>Mini-Projet AJAX/JSON</h1>
+
+    <div id="exchangeRate"></div>
+
+    <script>
+       
+        function getExchangeRates() {
+            const accessKey = 'RYei6afuWuiCJJYZBJbrJBZjJoVg2Tb0'  ;
+            const apiUrl = `http://data.fixer.io/api/latest?access_key=${accessKey}`;
+
+           
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', apiUrl, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                      
+                        const response = JSON.parse(xhr.responseText);
+                       
+                       
+                        const rates = response.rates;
+
+                      
+                        let exchangeRateHTML = '<h2>Taux de change</h2><ul>';
+                        for (const currency in rates) {
+                            exchangeRateHTML += `<li>${currency}: ${rates[currency]}</li>`;
+                        }
+                        exchangeRateHTML += '</ul>';
+
+                       
+                        document.getElementById('exchangeRate').innerHTML = exchangeRateHTML;
+                    } else {
+                        console.error('Erreur lors de la requête : ' + xhr.status);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+       
+        window.onload = getExchangeRates;
+    </script>
+</body>
+</html>
